@@ -1,0 +1,68 @@
+<div class="card w-full md:w-8/12 mx-auto">
+  <h2 class="mb-3">🧾 Place New Order</h2>
+
+  <form [formGroup]="orderForm" (ngSubmit)="submit()">
+    <div
+      *ngFor="let group of items.controls; let i = index"
+      [formGroup]="asFormGroup(group)"
+      class="field-group flex gap-2 items-center mb-3"
+    >
+      <p-dropdown
+        class="w-full"
+        [options]="menuItems"
+        optionLabel="name"
+        optionValue="_id"
+        [formControl]="asFormControl(group.get('item'))"
+        placeholder="Select Item"
+      ></p-dropdown>
+
+      <input
+        pInputText
+        type="number"
+        class="w-24"
+        min="1"
+        [formControl]="asFormControl(group.get('quantity'))"
+        placeholder="Qty"
+      />
+
+      <button
+        pButton
+        type="button"
+        icon="pi pi-trash"
+        class="p-button-danger"
+        (click)="removeItem(i)"
+      ></button>
+    </div>
+
+    <button
+      pButton
+      type="button"
+      icon="pi pi-plus"
+      label="Add Item"
+      (click)="addItem()"
+      class="mb-3"
+    ></button>
+
+    <div class="mb-3">
+      <label class="block font-semibold mb-1">Payment Method</label>
+      <p-dropdown
+        class="w-full"
+        [options]="paymentOptions"
+        formControlName="paymentMethod"
+        placeholder="Select Method"
+      ></p-dropdown>
+    </div>
+
+    <div class="text-xl font-bold mb-3">
+      Total: {{ total | currency }}
+    </div>
+
+    <button
+      pButton
+      type="submit"
+      label="Submit Order"
+      class="w-full"
+      [disabled]="orderForm.invalid || items.length === 0"
+    ></button>
+  </form>
+</div>

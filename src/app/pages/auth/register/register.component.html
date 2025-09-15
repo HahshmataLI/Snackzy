@@ -1,0 +1,74 @@
+<div class="flex items-center justify-center min-h-screen bg-gray-50">
+  <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
+    <h2 class="text-2xl font-semibold text-center mb-6">Register</h2>
+
+    <form #f="ngForm" (ngSubmit)="onSubmit()" class="space-y-5">
+      <!-- Name -->
+      <div class="flex flex-col gap-1">
+        <label for="name" class="text-sm font-medium text-gray-600">Name</label>
+        <input
+          pInputText
+          type="text"
+          name="name"
+          [(ngModel)]="name"
+          required
+          placeholder="Your full name"
+          class="w-full"
+        />
+      </div>
+
+      <!-- Email -->
+      <div class="flex flex-col gap-1">
+        <label for="email" class="text-sm font-medium text-gray-600">Email</label>
+        <input
+          pInputText
+          type="email"
+          name="email"
+          [(ngModel)]="email"
+          required
+          placeholder="example@email.com"
+          class="w-full"
+        />
+      </div>
+
+      <!-- Password -->
+      <div class="flex flex-col gap-1">
+        <label for="password" class="text-sm font-medium text-gray-600">Password</label>
+        <input
+          pInputText
+          type="password"
+          name="password"
+          [(ngModel)]="password"
+          required
+          placeholder="••••••••"
+          class="w-full"
+        />
+      </div>
+
+      <!-- Role -->
+      <div class="flex flex-col gap-1">
+        <label for="role" class="text-sm font-medium text-gray-600">Role</label>
+        <p-dropdown
+          [options]="roles"
+          optionLabel="label"
+          optionValue="value"
+          [(ngModel)]="role"
+          name="role"
+          required
+          class="w-full"
+        ></p-dropdown>
+      </div>
+
+      <!-- Action -->
+      <div class="flex justify-end">
+        <button
+          pButton
+          type="submit"
+          label="Register"
+          [disabled]="!f.valid"
+          class="w-full"
+        >Sign Up</button>
+      </div>
+    </form>
+  </div>
+</div>

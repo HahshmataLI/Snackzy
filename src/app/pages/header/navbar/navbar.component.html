@@ -1,0 +1,59 @@
+<!-- Navbar -->
+<div class="bg-emerald-500 text-white flex justify-between items-center px-4 h-12 shadow-md sticky top-0 z-50">
+  <!-- Left -->
+  <div>
+    <button class="flex items-center gap-2 border border-white px-3 py-1 rounded hover:bg-white hover:text-emerald-600 transition"
+      (click)="toggleSidebar()">
+      <i class="pi pi-bars"></i> Menu
+    </button>
+  </div>
+
+  <!-- Right -->
+  <div>
+    <ng-container *ngIf="isLoggedIn; else guest">
+      <div class="flex items-center gap-3">
+        <span class="text-sm font-medium">👋 {{ user.name }}</span>
+        <button class="flex items-center gap-2 border border-white px-3 py-1 rounded hover:bg-white hover:text-emerald-600 transition"
+          (click)="onLogout()">
+          <i class="pi pi-sign-out"></i> Logout
+        </button>
+      </div>
+    </ng-container>
+    <ng-template #guest>
+      <button class="flex items-center gap-2 border border-white px-3 py-1 rounded hover:bg-white hover:text-emerald-600 transition"
+        routerLink="/login" (click)="closeSidebar()">
+        <i class="pi pi-user"></i> Login
+      </button>
+    </ng-template>
+  </div>
+</div>
+
+<!-- Sidebar -->
+<div class="fixed top-0 left-0 h-full w-60 bg-gray-50 shadow-lg transform -translate-x-full transition-transform duration-300 z-50"
+  [class.translate-x-0]="sidebarVisible">
+  <div class="flex justify-between items-center mb-4 text-emerald-600 font-bold">
+    <h4>📋 POS Navigation</h4>
+    <button (click)="toggleSidebar()" class="text-gray-700 text-lg">
+      <i class="pi pi-times"></i>
+    </button>
+  </div>
+
+  <ul class="space-y-3">
+    <ng-container *ngIf="isLoggedIn && !isAdmin">
+      <li><a routerLink="/orders/create" (click)="closeSidebar()" class="block px-3 py-2 rounded bg-emerald-50 hover:bg-emerald-100 font-medium"><i class="pi pi-plus"></i> Add Sale</a></li>
+      <li><a routerLink="/orders/my-orders" (click)="closeSidebar()" class="block px-3 py-2 rounded bg-emerald-50 hover:bg-emerald-100 font-medium"><i class="pi pi-list"></i> My Orders</a></li>
+    </ng-container>
+
+    <ng-container *ngIf="isLoggedIn && isAdmin">
+      <li><a routerLink="/menu" (click)="closeSidebar()" class="block px-3 py-2 rounded bg-emerald-50 hover:bg-emerald-100 font-medium"><i class="pi pi-plus"></i> Add Item</a></li>
+      <li><a routerLink="/orders/create" (click)="closeSidebar()" class="block px-3 py-2 rounded bg-emerald-50 hover:bg-emerald-100 font-medium"><i class="pi pi-plus"></i> Add Sale</a></li>
+      <li><a routerLink="/list-orders" (click)="closeSidebar()" class="block px-3 py-2 rounded bg-emerald-50 hover:bg-emerald-100 font-medium"><i class="pi pi-list"></i> List Orders</a></li>
+      <li><a routerLink="/menu/items" (click)="closeSidebar()" class="block px-3 py-2 rounded bg-emerald-50 hover:bg-emerald-100 font-medium"><i class="pi pi-list"></i> Product List</a></li>
+      <li><a routerLink="/menu/add-category" (click)="closeSidebar()" class="block px-3 py-2 rounded bg-emerald-50 hover:bg-emerald-100 font-medium"><i class="pi pi-tag"></i> Add Category</a></li>
+      <li><a routerLink="/orders" (click)="closeSidebar()" class="block px-3 py-2 rounded bg-emerald-50 hover:bg-emerald-100 font-medium"><i class="pi pi-box"></i> All Orders</a></li>
+    </ng-container>
+  </ul>
+</div>
+
+<!-- Overlay -->
+<div *ngIf="sidebarVisible" class="fixed inset-0 bg-black/40 z-40" (click)="closeSidebar()"></div>

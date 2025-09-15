@@ -1,0 +1,48 @@
+<div class="add-item-card">
+  <h2 class="form-title">Add Item</h2>
+
+  <form [formGroup]="itemForm" (ngSubmit)="submit()" class="form-wrapper">
+    <!-- Name -->
+    <div class="form-field">
+      <label for="name">Name</label>
+      <input pInputText id="name" formControlName="name" placeholder="Item name" />
+    </div>
+
+    <!-- Price -->
+    <div class="form-field">
+      <label for="price">Price</label>
+      <input pInputText id="price" formControlName="price" type="number" placeholder="Price" />
+    </div>
+
+    <!-- Image -->
+    <div class="form-field">
+      <label for="image">Image File</label>
+      <input id="image" type="file" (change)="onFileChange($event)" />
+    </div>
+
+    <!-- Category -->
+    <div class="form-field">
+      <label for="category">Category</label>
+      <p-dropdown
+        inputId="category"
+        [options]="categories"
+        optionLabel="name"
+        optionValue="_id"
+        formControlName="category"
+        placeholder="Select category"
+        class="w-full"
+      ></p-dropdown>
+    </div>
+
+    <!-- Available -->
+    <div class="form-checkbox">
+      <p-checkbox binary="true" formControlName="available" inputId="available"></p-checkbox>
+      <label for="available">Available</label>
+    </div>
+
+    <!-- Button -->
+    <div class="form-action">
+      <button pButton type="submit" label="Add Item" [disabled]="itemForm.invalid"></button>
+    </div>
+  </form>
+</div>

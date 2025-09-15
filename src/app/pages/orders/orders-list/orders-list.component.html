@@ -1,0 +1,60 @@
+<div class="card">
+  <h2 class="mb-4">📦 All Orders</h2>
+
+  <p-table [value]="orders" [loading]="loading" [paginator]="true" [rows]="10">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Items</th>
+        <th>Total</th>
+        <th>Payment</th>
+        <th>Status</th>
+        <th>Created By</th>
+        <th>Created At</th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-order>
+      <tr>
+        <td>
+          <ul class="pl-2">
+            <li *ngFor="let i of order.items">
+              {{ i.item.name }} × {{ i.quantity }} — {{ i.item.price | currency }}
+            </li>
+          </ul>
+        </td>
+        <td>{{ order.total | currency }}</td>
+        <td>{{ order.paymentMethod | titlecase }}</td>
+        <td>
+          <p-dropdown
+            [options]="statusOptions"
+            [ngModel]="order.status"
+            (onChange)="updateStatus(order._id, $event.value)"
+            class="w-32"
+          ></p-dropdown>
+        </td>
+        <td>
+          {{ order.createdBy.name }}<br />
+          <small>{{ order.createdBy.email }}</small>
+        </td>
+        <td>{{ order.createdAt | date: 'short' }}</td>
+        <td>
+           <button
+    pButton
+    icon="pi pi-print"
+    class="p-button-sm p-button-secondary mr-2"
+    (click)="printInvoice(order)"
+  ></button>
+
+          <button
+            pButton
+            icon="pi pi-trash"
+            class="p-button-sm p-button-danger"
+            (click)="confirmDelete(order._id)"
+          ></button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+<p-confirmDialog></p-confirmDialog>

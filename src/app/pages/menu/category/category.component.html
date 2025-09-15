@@ -1,0 +1,27 @@
+<div class="add-item-card">
+  <h2 class="form-title">Add Category</h2>
+
+  <form (ngSubmit)="addCategory()" class="form-wrapper">
+    <div class="form-field">
+      <label for="categoryName">Category Name</label>
+      <input
+        pInputText
+        id="categoryName"
+        [(ngModel)]="name"
+        name="categoryName"
+        placeholder="Enter category name"
+        required
+      />
+      
+    </div>
+
+    <div class="form-action">
+      <button
+        pButton
+        type="submit"
+        label="Add"
+        [disabled]="!name || loading"
+      >Add Category</button>
+    </div>
+  </form>
+</div>
