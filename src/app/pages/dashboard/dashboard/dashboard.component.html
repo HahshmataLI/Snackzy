@@ -1,1 +1,146 @@
-<p>dashboard works!</p>
+<div class="p-6 bg-gray-50 min-h-screen">
+  <!-- Loading Spinner -->
+  <div *ngIf="loading" class="flex items-center justify-center py-16">
+    <p-progressSpinner></p-progressSpinner>
+  </div>
+
+  <div *ngIf="!loading" class="space-y-6">
+    <!-- KPIs -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="p-6 bg-white rounded-xl shadow flex flex-col">
+        <div class="text-sm font-medium text-gray-500">Total Sales (Today)</div>
+        <div class="text-3xl font-bold text-green-600 mt-2">
+          {{ formatCurrency(totalSalesToday) }}
+        </div>
+        <div class="text-xs text-gray-400 mt-1">
+          {{ ordersCountToday }} orders
+        </div>
+      </div>
+
+      <div class="p-6 bg-white rounded-xl shadow flex flex-col">
+        <div class="text-sm font-medium text-gray-500">Total Sales (Last 7 days)</div>
+        <div class="text-3xl font-bold text-blue-600 mt-2">
+          {{ formatCurrency(totalSalesWeek) }}
+        </div>
+        <div class="text-xs text-gray-400 mt-1">
+          Avg Order: {{ formatCurrency(avgOrderValue) }}
+        </div>
+      </div>
+
+      <div class="p-6 bg-white rounded-xl shadow flex flex-col">
+        <div class="text-sm font-medium text-gray-500">Total Sales (This Month)</div>
+        <div class="text-3xl font-bold text-indigo-600 mt-2">
+          {{ formatCurrency(totalSalesMonth) }}
+        </div>
+        <div class="text-xs text-gray-400 mt-1">
+          {{ topItemsList.length ? topItemsList[0].name : '—' }} is top seller
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="col-span-2 p-6 bg-white rounded-xl shadow">
+        <h3 class="text-lg font-semibold mb-3">📈 Sales - Last 7 days</h3>
+        <p-chart type="line" [data]="salesLineData"></p-chart>
+      </div>
+
+      <div class="p-6 bg-white rounded-xl shadow flex flex-col justify-between">
+        <div>
+          <h3 class="text-lg font-semibold mb-3">💳 Payment Methods</h3>
+          <p-chart type="doughnut" [data]="paymentDoughnutData"></p-chart>
+        </div>
+        <button
+          pButton
+          label="Refresh"
+          icon="pi pi-refresh"
+          class="mt-4 p-button-outlined p-button-sm"
+          (click)="onRefresh()"
+        ></button>
+      </div>
+    </div>
+
+    <!-- Top Items + Recent Orders -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Top Items -->
+      <div class="p-6 bg-white rounded-xl shadow">
+        <h3 class="text-lg font-semibold mb-3">🏆 Top Items</h3>
+        <ul>
+          <li
+            *ngFor="let it of topItemsList"
+            class="py-3 border-b last:border-b-0 flex justify-between items-center"
+          >
+            <div>
+              <div class="font-medium">{{ it.name }}</div>
+              <div class="text-xs text-gray-500">
+                Revenue: {{ formatCurrency(it.revenue) }}
+              </div>
+            </div>
+            <div class="text-lg font-bold text-gray-700">x{{ it.qty }}</div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Recent Orders -->
+      <div class="lg:col-span-2 p-6 bg-white rounded-xl shadow">
+        <h3 class="text-lg font-semibold mb-3">🕒 Recent Orders</h3>
+        <p-table [value]="recentOrders" [paginator]="true" [rows]="5">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Date</th>
+              <th>Order ID</th>
+              <th>Items</th>
+              <th>Total</th>
+              <th>Payment</th>
+              <th>Status</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-order>
+            <tr>
+              <td>{{ order.createdAt | date:'short' }}</td>
+              <td class="font-mono text-xs">{{ order._id }}</td>
+              <td>
+                <div *ngFor="let it of order.items" class="text-xs text-gray-600">
+                  {{ it.item.name }} x{{ it.quantity }}
+                </div>
+              </td>
+              <td class="font-semibold text-green-600">
+                {{ formatCurrency(order.total) }}
+              </td>
+              <td class="capitalize">{{ order.paymentMethod }}</td>
+              <td>
+                <span
+                  class="px-2 py-1 rounded-full text-xs font-medium"
+                  [ngClass]="{
+                    'bg-green-100 text-green-700': order.status === 'completed',
+                    'bg-yellow-100 text-yellow-700': order.status === 'pending',
+                    'bg-red-100 text-red-700': order.status === 'cancelled'
+                  }"
+                >
+                  {{ order.status }}
+                </span>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+
+    <!-- Low Stock Alerts -->
+    <div *ngIf="lowStockSupported" class="p-6 bg-white rounded-xl shadow">
+      <h3 class="text-lg font-semibold mb-3 text-red-600">⚠️ Low Stock Alerts</h3>
+      <ul>
+        <li
+          *ngFor="let i of lowStockItems"
+          class="py-2 border-b last:border-b-0 flex justify-between items-center"
+        >
+          <div>{{ i.name }}</div>
+          <div class="font-semibold text-red-600">Stock: {{ getStock(i) }}</div>
+        </li>
+      </ul>
+    </div>
+    <div *ngIf="!lowStockSupported" class="text-sm text-gray-500 mt-4">
+      Low stock not available — add a <code>stock</code> field in Item model.
+    </div>
+  </div>
+</div>

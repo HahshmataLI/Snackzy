@@ -1,14 +1,17 @@
-<div class="card w-full md:w-8/12 mx-auto">
-  <h2 class="mb-3">🧾 Place New Order</h2>
+<div class="card w-full md:w-8/12 mx-auto shadow-lg rounded-2xl p-6 bg-white">
+  <h2 class="text-2xl font-bold mb-6 flex items-center gap-2 text-gray-800">
+    🧾 Place New Order
+  </h2>
 
-  <form [formGroup]="orderForm" (ngSubmit)="submit()">
+  <form [formGroup]="orderForm" (ngSubmit)="submit()" class="space-y-5">
+    <!-- Items -->
     <div
       *ngFor="let group of items.controls; let i = index"
       [formGroup]="asFormGroup(group)"
-      class="field-group flex gap-2 items-center mb-3"
+      class="flex gap-3 items-center bg-gray-50 p-3 rounded-lg border border-gray-200"
     >
       <p-dropdown
-        class="w-full"
+        class="flex-1"
         [options]="menuItems"
         optionLabel="name"
         optionValue="_id"
@@ -19,7 +22,7 @@
       <input
         pInputText
         type="number"
-        class="w-24"
+        class="w-24 text-center border rounded-md p-2"
         min="1"
         [formControl]="asFormControl(group.get('quantity'))"
         placeholder="Qty"
@@ -29,22 +32,24 @@
         pButton
         type="button"
         icon="pi pi-trash"
-        class="p-button-danger"
+        class="p-button-rounded p-button-danger"
         (click)="removeItem(i)"
       ></button>
     </div>
 
+    <!-- Add Item Button -->
     <button
       pButton
       type="button"
       icon="pi pi-plus"
       label="Add Item"
+      class="w-full p-button-outlined p-button-success"
       (click)="addItem()"
-      class="mb-3"
     ></button>
 
-    <div class="mb-3">
-      <label class="block font-semibold mb-1">Payment Method</label>
+    <!-- Payment Method -->
+    <div>
+      <label class="block font-semibold mb-2 text-gray-700">💳 Payment Method</label>
       <p-dropdown
         class="w-full"
         [options]="paymentOptions"
@@ -53,15 +58,17 @@
       ></p-dropdown>
     </div>
 
-    <div class="text-xl font-bold mb-3">
-      Total: {{ total | currency }}
+    <!-- Total -->
+    <div class="text-2xl font-extrabold text-right text-green-600">
+      Total: {{ total | currency:'PKR ':'symbol':'1.0-0':'en-PK' }}
     </div>
 
+    <!-- Submit -->
     <button
       pButton
       type="submit"
-      label="Submit Order"
-      class="w-full"
+      label="✅ Submit Order"
+      class="w-full p-button-lg p-button-primary font-semibold"
       [disabled]="orderForm.invalid || items.length === 0"
     ></button>
   </form>
